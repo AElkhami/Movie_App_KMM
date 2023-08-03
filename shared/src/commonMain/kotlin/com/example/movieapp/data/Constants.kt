@@ -1,4 +1,4 @@
-package com.example.aimovies.data
+package com.example.movieapp.data
 
 /**
  * Created by A.Elkhami on 21/07/2023.

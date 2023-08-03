@@ -1,4 +1,4 @@
-package com.example.aimovies.data.local.favourite.dto
+package com.example.movieapp.data.local.favourite.dto
 
 /**
  * Created by A.Elkhami on 25/07/2023.

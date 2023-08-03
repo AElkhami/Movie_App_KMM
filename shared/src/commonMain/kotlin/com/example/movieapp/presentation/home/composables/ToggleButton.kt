@@ -1,4 +1,4 @@
-package com.example.aimovies.presentation.home.composables
+package com.example.movieapp.presentation.home.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -15,10 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.aimovies.presentation.ui.theme.AIMoviesTheme
 import com.example.aimovies.presentation.ui.theme.MovieYellow
 
 /**
@@ -72,18 +70,6 @@ fun ToggleButton(
                     fontWeight = FontWeight.Bold
                 )
             }
-        }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun ToggleButtonPreview() {
-    AIMoviesTheme {
-        ToggleButton(
-            modifier = Modifier, "Selected", listOf("Selected", "Unselected")
-        ) {
-
         }
     }
 }

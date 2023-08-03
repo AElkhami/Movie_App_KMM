@@ -1,7 +1,7 @@
-package com.example.aimovies.presentation.home.mapper
+package com.example.movieapp.presentation.home.mapper
 
-import com.example.aimovies.domain.model.MovieModel
-import example.moviedb.FavouriteEntitiy
+import com.example.movieapp.domain.model.MovieModel
+import database.moviedb.FavouriteEntitiy
 
 /**
  * Created by A.Elkhami on 25/07/2023.

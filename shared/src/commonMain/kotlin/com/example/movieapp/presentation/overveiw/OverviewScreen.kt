@@ -1,4 +1,4 @@
-package com.example.aimovies.presentation.overveiw
+package com.example.movieapp.presentation.overveiw
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,31 +34,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
-import com.example.aimovies.R
-import com.example.aimovies.domain.model.MovieModel
-import com.example.aimovies.presentation.home.composables.LoadingAnimation
-import com.example.aimovies.presentation.ui.LocalSpacing
 import com.example.aimovies.presentation.ui.theme.MovieYellow
-import com.example.aimovies.presentation.ui.theme.RateBackground
-import com.gowtham.ratingbar.RatingBar
-import com.gowtham.ratingbar.RatingBarStyle
-import com.gowtham.ratingbar.StepSize
-import org.koin.androidx.compose.koinViewModel
-import java.lang.Float.min
+import com.example.movieapp.domain.model.MovieModel
+import com.example.movieapp.presentation.ui.LocalSpacing
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import kotlin.math.min
 
 /**
  * Created by A.Elkhami on 25/07/2023.
@@ -71,9 +57,9 @@ fun OverviewScreen(
     releaseDate: String,
     posterPath: String,
     voteAverage: String,
-    navController: NavHostController
+//    navController: NavHostController
 ) {
-    val viewModel = koinViewModel<OverviewViewModel>()
+//    val viewModel = koinViewModel<OverviewViewModel>()
 
     val movie = MovieModel(
         movieId = movieId,
@@ -84,10 +70,14 @@ fun OverviewScreen(
         voteAverage = voteAverage.toDouble()
     )
 
-    viewModel.checkIfMovieIsFavourite(movieId)
-    viewModel.getMovieRating(movieId)
+//    viewModel.checkIfMovieIsFavourite(movieId)
+//    viewModel.getMovieRating(movieId)
 
-    val uiState = viewModel.uiState
+//    val uiState = viewModel.uiState
+    val uiState = OverviewUIModel(
+        isMovieFavourite = true,
+        rating = 9.0f
+    )
 
     OverviewScreenUi(
         movieId = movieId,
@@ -97,21 +87,21 @@ fun OverviewScreen(
         posterPath = posterPath,
         voteAverage = voteAverage,
         uiState = uiState,
-        navController = navController,
+//        navController = navController,
         onAddFavouriteClick = {
             if (uiState.isMovieFavourite) {
-                viewModel.deleteFavouriteMovie(movieId)
+//                viewModel.deleteFavouriteMovie(movieId)
             } else {
-                viewModel.insertFavouriteMovie(movie)
+//                viewModel.insertFavouriteMovie(movie)
             }
         },
         onRatingSelected = {
-            viewModel.insertOrUpdateRating(movieId = movieId, rating = it)
+//            viewModel.insertOrUpdateRating(movieId = movieId, rating = it)
         }
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun OverviewScreenUi(
     movieId: Long,
@@ -121,13 +111,13 @@ fun OverviewScreenUi(
     posterPath: String,
     voteAverage: String,
     uiState: OverviewUIModel,
-    navController: NavHostController?,
+//    navController: NavHostController?,
     onAddFavouriteClick: (MovieModel) -> Unit,
     onRatingSelected: (Float) -> Unit
 ) {
     val spacing = LocalSpacing.current
-    val painter = rememberAsyncImagePainter(posterPath)
-    val state = painter.state
+//    val painter = rememberAsyncImagePainter(posterPath)
+//    val state = painter.state
     val scrollState = rememberScrollState()
     var movieRating by remember {
         mutableStateOf(uiState.rating)
@@ -186,63 +176,63 @@ fun OverviewScreenUi(
                         },
                         contentAlignment = Alignment.Center
                     ) {
-                        if (state is AsyncImagePainter.State.Loading) {
-                            LoadingAnimation()
-                        }
-                        AsyncImage(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(spacing.overviewImageBackgroundSize)
-                                .clip(
-                                    RoundedCornerShape(
-                                        bottomStart = spacing.spaceLarge,
-                                        bottomEnd = spacing.spaceLarge
-                                    )
-                                )
-                                .blur(spacing.spaceLarge, spacing.spaceLarge),
-                            contentScale = ContentScale.FillWidth,
-                            model = posterPath,
-                            onLoading = {
-
-                            },
-                            error = painterResource(id = R.drawable.movie_placeholder),
-                            contentDescription = null
-                        )
+//                        if (state is AsyncImagePainter.State.Loading) {
+//                            LoadingAnimation()
+//                        }
+//                        AsyncImage(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .height(spacing.overviewImageBackgroundSize)
+//                                .clip(
+//                                    RoundedCornerShape(
+//                                        bottomStart = spacing.spaceLarge,
+//                                        bottomEnd = spacing.spaceLarge
+//                                    )
+//                                )
+//                                .blur(spacing.spaceLarge, spacing.spaceLarge),
+//                            contentScale = ContentScale.FillWidth,
+//                            model = posterPath,
+//                            onLoading = {
+//
+//                            },
+//                            error = painterResource(res = "R.drawable.movie_placeholder"),
+//                            contentDescription = null
+//                        )
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(spacing.overviewImageSize)
-                                    .clip(
-                                        RoundedCornerShape(spacing.spaceExtraLarge)
-                                    ),
-                                contentScale = ContentScale.Fit,
-                                model = posterPath,
-                                onLoading = {
-
-                                },
-                                error = painterResource(id = R.drawable.movie_placeholder),
-                                contentDescription = null
-                            )
+//                            AsyncImage(
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .height(spacing.overviewImageSize)
+//                                    .clip(
+//                                        RoundedCornerShape(spacing.spaceExtraLarge)
+//                                    ),
+//                                contentScale = ContentScale.Fit,
+//                                model = posterPath,
+//                                onLoading = {
+//
+//                                },
+//                                error = painterResource(res = "R.drawable.movie_placeholder"),
+//                                contentDescription = null
+//                            )
                             Spacer(modifier = Modifier.height(spacing.spaceMedium))
-                            RatingBar(
-                                value = movieRating,
-                                style = RatingBarStyle.Fill(MovieYellow),
-                                stepSize = StepSize.HALF,
-                                onValueChange = {
-                                    movieRating = it
-                                },
-                                onRatingChanged = {
-                                    onRatingSelected(it)
-                                },
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(spacing.spaceMedium))
-                                    .background(RateBackground)
-                                    .padding(spacing.spaceMedium)
-                            )
+//                            RatingBar(
+//                                value = movieRating,
+//                                style = RatingBarStyle.Fill(MovieYellow),
+//                                stepSize = StepSize.HALF,
+//                                onValueChange = {
+//                                    movieRating = it
+//                                },
+//                                onRatingChanged = {
+//                                    onRatingSelected(it)
+//                                },
+//                                modifier = Modifier
+//                                    .clip(RoundedCornerShape(spacing.spaceMedium))
+//                                    .background(RateBackground)
+//                                    .padding(spacing.spaceMedium)
+//                            )
                         }
                     }
                     Column(
@@ -309,7 +299,7 @@ fun OverviewScreenUi(
                     .clip(CircleShape)
                     .background(Color.White)
                     .clickable {
-                        navController?.popBackStack()
+//                        navController?.popBackStack()
                     }
                     .padding(spacing.spaceSmall)
                 ) {
@@ -321,21 +311,4 @@ fun OverviewScreenUi(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun OverviewScreenPreview() {
-    OverviewScreenUi(
-        movieId = 1,
-        title = "The Demon Barber of Fleet Street",
-        overview = "Former cinema superhero Riggan Thomson (Michael Keaton) is mounting an ambitious Broadway production that he hopes will breathe new life into his stagnant career. It's risky, but he hopes that his creative gamble will prove that he's a real artist and not just a washed-up movie star. As opening night approaches, a castmate is injured, forcing Riggan to hire an actor (Edward Norton) who is guaranteed to shake things up. Meanwhile, Riggan must deal with his girlfriend, daughter and ex-wife.",
-        releaseDate = "2023",
-        posterPath = "https://assets-global.website-files.com/6009ec8cda7f305645c9d91b/6408f676b5811234c887ca62_top%20gun%20maverick-min.png",
-        voteAverage = "8.5",
-        navController = null,
-        uiState = OverviewUIModel(),
-        onAddFavouriteClick = {},
-        onRatingSelected = {}
-    )
 }

@@ -1,4 +1,4 @@
-package com.example.aimovies.presentation.home
+package com.example.movieapp.presentation.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,19 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.aimovies.domain.model.MovieModel
-import com.example.aimovies.presentation.home.composables.EmptyListView
-import com.example.aimovies.presentation.home.composables.ErrorView
-import com.example.aimovies.presentation.home.composables.MovieHorizontalItem
-import com.example.aimovies.presentation.home.composables.MovieItem
-import com.example.aimovies.presentation.home.composables.ToggleButton
-import com.example.aimovies.presentation.home.composables.rememberForeverLazyListState
-import com.example.aimovies.presentation.ui.LocalSpacing
-import com.example.aimovies.presentation.ui.theme.AIMoviesTheme
-import org.koin.androidx.compose.koinViewModel
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import com.example.movieapp.domain.model.MovieModel
+import com.example.movieapp.presentation.home.composables.EmptyListView
+import com.example.movieapp.presentation.home.composables.ErrorView
+import com.example.movieapp.presentation.home.composables.MovieHorizontalItem
+import com.example.movieapp.presentation.home.composables.MovieItem
+import com.example.movieapp.presentation.home.composables.ToggleButton
+import com.example.movieapp.presentation.home.composables.rememberForeverLazyListState
+import com.example.movieapp.presentation.ui.LocalSpacing
 
 /**
  * Created by A.Elkhami on 18/07/2023.
@@ -44,24 +39,51 @@ import java.nio.charset.StandardCharsets
 fun HomeScreen(
     onNavigateToOverview: (Long, String, String, String, String, String) -> Unit
 ) {
-    val viewModel = koinViewModel<HomeViewModel>()
+//    val viewModel = koinViewModel<HomeViewModel>()
     LaunchedEffect(key1 = true) {
-        viewModel.getDiscoverMovie(1)
-        viewModel.getFavouriteMovies()
+//        viewModel.getDiscoverMovie(1)
+//        viewModel.getFavouriteMovies()
     }
     HomeScreenUi(
-        viewModel.uiState,
+//        viewModel.uiState,
+        HomeUiModel(
+            discoverMovieList = listOf(
+                MovieModel(
+                    123,
+                    "over view",
+                    "path",
+                    "2023",
+                    "title",
+                    9.0
+                )
+            ),
+            favouriteMovieList = listOf(
+                MovieModel(
+                    123,
+                    "over view",
+                    "path",
+                    "2023",
+                    "title",
+                    9.0
+                )
+            ),
+            isLoading = false
+        ),
         onNavigateToOverview = {
             onNavigateToOverview(
                 it.movieId,
                 it.title,
                 it.overview,
                 it.releaseDate,
-                URLEncoder.encode(it.posterPath, StandardCharsets.UTF_8.toString()),
+//                URLEncoder.encode(it.posterPath, StandardCharsets.UTF_8.toString()),
+                it.posterPath,
                 it.voteAverage.toString()
             )
         },
-        onRefresh = { viewModel.getDiscoverMovie(1) })
+        onRefresh = {
+//            viewModel.getDiscoverMovie(1)
+        }
+    )
 }
 
 @Composable
@@ -164,13 +186,5 @@ fun HomeScreenUi(
                 }
             }
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun HomeScreenPreview() {
-    AIMoviesTheme {
-        HomeScreenUi(HomeUiModel(HomeUiModel().discoverMovieList), {}, {})
     }
 }

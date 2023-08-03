@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("org.jetbrains.compose")
+    id("app.cash.sqldelight") version "2.0.0"
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -27,21 +28,29 @@ kotlin {
         }
     }
 
+    val ktorVersion = "2.3.2"
+
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
-                implementation(compose.material)
+                implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
 
                 //ktor
-                implementation("io.ktor:ktor-server-core:2.3.2")
+                implementation("io.ktor:ktor-server-core:$ktorVersion")
+
+                // Serialization
+                val serializationVersion = "1.5.1"
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
 
                 //sqlDelight
-                implementation("com.squareup.sqldelight:runtime:1.5.5")
-                implementation("com.squareup.sqldelight:coroutines-extensions:1.5.5")
+//                val sqlDelightVersion = "2.0.0"
+//                implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
+//                implementation("app.cash.sqldelight:coroutines-extensions:$sqlDelightVersion")
 
                 //koin
                 with(Deps.Koin) {
@@ -55,6 +64,25 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
+        val androidMain by getting {
+            dependencies {
+                implementation ("app.cash.sqldelight:android-driver:2.0.0")
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+
+                // Import the Firebase BoM
+                implementation (platform("com.google.firebase:firebase-bom:32.2.0"))
+                implementation ("com.google.firebase:firebase-analytics-ktx")
+            }
+        }
+        val androidUnitTest by getting
+
+        val iosMain by getting {
+            dependsOn(commonMain)
+            dependencies {
+                implementation ("app.cash.sqldelight:native-driver:2.0.0")
+                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+            }
+        }
     }
 }
 
@@ -65,8 +93,14 @@ android {
         minSdk = 27
     }
 }
-dependencies {
-    implementation("com.google.android.gms:play-services-measurement-api:21.3.0")
+
+sqldelight {
+    databases {
+        create("MovieDatabase") {
+            packageName.set("com.example.sqldelight.database.moviedb")
+            generateAsync.set(true)
+        }
+    }
 }
 
 object Versions {
@@ -74,11 +108,9 @@ object Versions {
 }
 
 object Deps {
-
     object Koin {
         const val core = "io.insert-koin:koin-core:${Versions.koin}"
         const val test = "io.insert-koin:koin-test:${Versions.koin}"
         const val android = "io.insert-koin:koin-android:${Versions.koin}"
     }
-
 }

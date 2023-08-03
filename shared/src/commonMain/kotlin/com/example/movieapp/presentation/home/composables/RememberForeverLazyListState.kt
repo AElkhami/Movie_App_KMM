@@ -1,4 +1,4 @@
-package com.example.aimovies.presentation.home.composables
+package com.example.movieapp.presentation.home.composables
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable

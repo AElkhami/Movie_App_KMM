@@ -1,4 +1,4 @@
-package com.example.aimovies.presentation.home.composables
+package com.example.movieapp.presentation.home.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.aimovies.presentation.ui.LocalSpacing
+import com.example.movieapp.presentation.ui.LocalSpacing
 import com.example.aimovies.presentation.ui.theme.MovieYellow
 
 /**

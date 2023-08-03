@@ -1,4 +1,4 @@
-package com.example.aimovies.presentation.home.composables
+package com.example.movieapp.presentation.home.composables
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import com.example.aimovies.presentation.ui.LocalSpacing
+import com.example.movieapp.presentation.ui.LocalSpacing
 
 /**
  * Created by A.Elkhami on 18/07/2023.

@@ -1,6 +1,6 @@
-package com.example.aimovies.presentation.home
+package com.example.movieapp.presentation.home
 
-import com.example.aimovies.domain.model.MovieModel
+import com.example.movieapp.domain.model.MovieModel
 
 /**
  * Created by A.Elkhami on 19/07/2023.

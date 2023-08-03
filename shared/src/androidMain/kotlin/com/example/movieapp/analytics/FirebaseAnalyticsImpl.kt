@@ -1,6 +1,5 @@
 package com.example.movieapp.analytics
 
-import com.example.movieapp.analytics.Analytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent

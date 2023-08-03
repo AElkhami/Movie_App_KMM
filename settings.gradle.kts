@@ -20,7 +20,7 @@ pluginManagement {
 
         id("org.jetbrains.compose").version(composeVersion)
         id("com.android.library") version "8.0.1"
-        id("org.jetbrains.kotlin.android") version "1.8.20"
+        id("org.jetbrains.kotlin.android") version "1.9.0"
     }
 }
 

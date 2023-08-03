@@ -1,4 +1,4 @@
-package com.example.aimovies.presentation.overveiw
+package com.example.movieapp.presentation.overveiw
 
 /**
  * Created by A.Elkhami on 26/07/2023.

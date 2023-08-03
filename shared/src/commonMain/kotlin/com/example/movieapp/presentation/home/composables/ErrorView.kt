@@ -1,4 +1,4 @@
-package com.example.aimovies.presentation.home.composables
+package com.example.movieapp.presentation.home.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.example.aimovies.presentation.ui.LocalSpacing
+import com.example.movieapp.presentation.ui.LocalSpacing
 import com.example.aimovies.presentation.ui.theme.MovieYellow
 
 /**

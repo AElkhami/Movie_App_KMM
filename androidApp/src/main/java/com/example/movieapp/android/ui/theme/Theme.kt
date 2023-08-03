@@ -1,4 +1,4 @@
-package com.example.aimovies.presentation.ui.theme
+package com.example.movieapp.android.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.example.aimovies.presentation.ui.Dimensions
-import com.example.aimovies.presentation.ui.LocalSpacing
+import com.example.movieapp.presentation.ui.Dimensions
+import com.example.movieapp.presentation.ui.LocalSpacing
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

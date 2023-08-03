@@ -14,8 +14,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.aimovies.presentation.home.HomeScreen
-import com.example.aimovies.presentation.overveiw.OverviewScreen
+import com.example.movieapp.android.ui.theme.AIMoviesTheme
+import com.example.movieapp.presentation.home.HomeScreen
+import com.example.movieapp.presentation.overveiw.OverviewScreen
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -44,7 +45,7 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            MyApplicationTheme {
+            AIMoviesTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
@@ -80,8 +81,8 @@ class MainActivity : ComponentActivity() {
                                 overview,
                                 releaseDate,
                                 posterPath,
-                                voteAverage,
-                                navController
+                                voteAverage
+//                                navController
                             )
                         }
                     }
