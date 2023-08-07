@@ -10,6 +10,11 @@ plugins {
     id("kotlinx-serialization")
 }
 
+object Versions {
+    const val koin = "3.4.1"
+    const val sqlDelight: String = "2.0.0"
+}
+
 val ktorVersion = "2.3.2"
 val coroutinesVersion = "1.7.3"
 val dateTimeVersion = "0.4.0"
@@ -35,22 +40,8 @@ kotlin {
         it.binaries.framework {
             baseName = "shared"
             isStatic = true
-
-            it.compilations.all {
-                kotlinOptions.freeCompilerArgs += arrayOf("-linker-options", "-lsqlite3")
-            }
         }
     }
-
-    targets.filterIsInstance<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>()
-        .forEach {
-            it.binaries.filterIsInstance<org.jetbrains.kotlin.gradle.plugin.mpp.Framework>()
-                .forEach { lib ->
-                    lib.isStatic = false
-                    lib.linkerOpts.add("-lsqlite3")
-
-                }
-        }
 
     targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
         binaries.withType(org.jetbrains.kotlin.gradle.plugin.mpp.Framework::class.java).all {
@@ -89,10 +80,7 @@ kotlin {
                 implementation("app.cash.sqldelight:coroutines-extensions:${Versions.sqlDelight}")
 
                 //koin
-                with(Deps.Koin) {
-                    api(core)
-                    api(test)
-                }
+                implementation("io.insert-koin:koin-core:${Versions.koin}")
             }
         }
         val commonTest by getting {
@@ -177,16 +165,8 @@ sqldelight {
             packageName.set("com.example.sqldelight.database.moviedb")
             generateAsync.set(false)
         }
-        linkSqlite.set(true)
     }
 }
-
-//sqldelight {
-//    database("MovieDatabase") {
-//        packageName = "com.example.sqldelight.database.moviedb"
-//        sourceFolders = listOf("sqldelight")
-//    }
-//}
 
 dependencies {
     implementation("androidx.core:core:1.10.1")
@@ -194,17 +174,4 @@ dependencies {
     commonMainApi("dev.icerock.moko:mvvm-compose:0.16.1")
     commonMainApi("dev.icerock.moko:mvvm-flow:0.16.1")
     commonMainApi("dev.icerock.moko:mvvm-flow-compose:0.16.1")
-}
-
-object Versions {
-    const val koin = "3.2.0"
-    const val sqlDelight: String = "2.0.0"
-}
-
-object Deps {
-    object Koin {
-        const val core = "io.insert-koin:koin-core:${Versions.koin}"
-        const val test = "io.insert-koin:koin-test:${Versions.koin}"
-        const val android = "io.insert-koin:koin-android:${Versions.koin}"
-    }
 }

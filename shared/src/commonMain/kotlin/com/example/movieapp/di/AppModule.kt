@@ -26,3 +26,5 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) {
 object GetViewModels : KoinComponent {
     fun getHomeViewModel() = get<HomeViewModel>()
 }
+
+fun initKoin() = initKoin {}
