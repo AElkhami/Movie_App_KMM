@@ -6,7 +6,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.movieapp.presentation.home.HomeScreen
-import com.example.movieapp.presentation.overveiw.OverviewScreen
 
 /**
  * Created by A.Elkhami on 03/08/2023.
@@ -14,6 +13,7 @@ import com.example.movieapp.presentation.overveiw.OverviewScreen
 
 @Composable
 fun App() {
+
     Surface(
         modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
     ) {

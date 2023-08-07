@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import com.example.movieapp.di.GetViewModels
 import com.example.movieapp.domain.model.MovieModel
 import com.example.movieapp.presentation.home.composables.EmptyListView
 import com.example.movieapp.presentation.home.composables.ErrorView
@@ -39,49 +40,34 @@ import com.example.movieapp.presentation.ui.LocalSpacing
 fun HomeScreen(
     onNavigateToOverview: (Long, String, String, String, String, String) -> Unit
 ) {
-//    val viewModel = koinViewModel<HomeViewModel>()
+    val viewModel = GetViewModels.getHomeViewModel()
+//    val viewModel = getViewModel(
+//        key = "home_screen",
+//        factory = viewModelFactory {
+//            GetViewModels.getHomeViewModel()
+//        }
+//    )
+
     LaunchedEffect(key1 = true) {
-//        viewModel.getDiscoverMovie(1)
-//        viewModel.getFavouriteMovies()
+        viewModel.getDiscoverMovie(1)
+        viewModel.getFavouriteMovies()
     }
     HomeScreenUi(
-//        viewModel.uiState,
-        HomeUiModel(
-            discoverMovieList = listOf(
-                MovieModel(
-                    123,
-                    "over view",
-                    "path",
-                    "2023",
-                    "title",
-                    9.0
-                )
-            ),
-            favouriteMovieList = listOf(
-                MovieModel(
-                    123,
-                    "over view",
-                    "path",
-                    "2023",
-                    "title",
-                    9.0
-                )
-            ),
-            isLoading = false
-        ),
+        viewModel.uiState,
         onNavigateToOverview = {
-            onNavigateToOverview(
-                it.movieId,
-                it.title,
-                it.overview,
-                it.releaseDate,
-//                URLEncoder.encode(it.posterPath, StandardCharsets.UTF_8.toString()),
-                it.posterPath,
-                it.voteAverage.toString()
-            )
+                             viewModel.insertFavouriteMovie(it)
+//            onNavigateToOverview(
+//                it.movieId,
+//                it.title,
+//                it.overview,
+//                it.releaseDate,
+////                URLEncoder.encode(it.posterPath, StandardCharsets.UTF_8.toString()),
+//                it.posterPath,
+//                it.voteAverage.toString()
+//            )
         },
         onRefresh = {
-//            viewModel.getDiscoverMovie(1)
+            viewModel.getDiscoverMovie(1)
         }
     )
 }

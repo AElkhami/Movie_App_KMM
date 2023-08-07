@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -42,7 +43,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.example.aimovies.presentation.ui.theme.MovieYellow
 import com.example.movieapp.domain.model.MovieModel
+import com.example.movieapp.presentation.home.composables.LoadingAnimation
 import com.example.movieapp.presentation.ui.LocalSpacing
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
+import io.ktor.http.Url
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.math.min
 
@@ -89,11 +94,11 @@ fun OverviewScreen(
         uiState = uiState,
 //        navController = navController,
         onAddFavouriteClick = {
-            if (uiState.isMovieFavourite) {
+//            if (uiState.isMovieFavourite) {
 //                viewModel.deleteFavouriteMovie(movieId)
-            } else {
+//            } else {
 //                viewModel.insertFavouriteMovie(movie)
-            }
+//            }
         },
         onRatingSelected = {
 //            viewModel.insertOrUpdateRating(movieId = movieId, rating = it)
@@ -116,8 +121,6 @@ fun OverviewScreenUi(
     onRatingSelected: (Float) -> Unit
 ) {
     val spacing = LocalSpacing.current
-//    val painter = rememberAsyncImagePainter(posterPath)
-//    val state = painter.state
     val scrollState = rememberScrollState()
     var movieRating by remember {
         mutableStateOf(uiState.rating)
@@ -176,47 +179,38 @@ fun OverviewScreenUi(
                         },
                         contentAlignment = Alignment.Center
                     ) {
-//                        if (state is AsyncImagePainter.State.Loading) {
-//                            LoadingAnimation()
-//                        }
-//                        AsyncImage(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .height(spacing.overviewImageBackgroundSize)
-//                                .clip(
-//                                    RoundedCornerShape(
-//                                        bottomStart = spacing.spaceLarge,
-//                                        bottomEnd = spacing.spaceLarge
-//                                    )
-//                                )
-//                                .blur(spacing.spaceLarge, spacing.spaceLarge),
-//                            contentScale = ContentScale.FillWidth,
-//                            model = posterPath,
-//                            onLoading = {
-//
-//                            },
-//                            error = painterResource(res = "R.drawable.movie_placeholder"),
-//                            contentDescription = null
-//                        )
+                        KamelImage(
+                            resource = asyncPainterResource(data = Url(posterPath)),
+                            contentDescription = null,
+                            onLoading = { LoadingAnimation() },
+                            onFailure = { },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(spacing.overviewImageBackgroundSize)
+                                .clip(
+                                    RoundedCornerShape(
+                                        bottomStart = spacing.spaceLarge,
+                                        bottomEnd = spacing.spaceLarge
+                                    )
+                                )
+                                .blur(spacing.spaceLarge, spacing.spaceLarge)
+                        )
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-//                            AsyncImage(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .height(spacing.overviewImageSize)
-//                                    .clip(
-//                                        RoundedCornerShape(spacing.spaceExtraLarge)
-//                                    ),
-//                                contentScale = ContentScale.Fit,
-//                                model = posterPath,
-//                                onLoading = {
-//
-//                                },
-//                                error = painterResource(res = "R.drawable.movie_placeholder"),
-//                                contentDescription = null
-//                            )
+                            KamelImage(
+                                resource = asyncPainterResource(data = Url(posterPath)),
+                                contentDescription = null,
+                                onLoading = { LoadingAnimation() },
+                                onFailure = { },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(spacing.overviewImageSize)
+                                    .clip(
+                                        RoundedCornerShape(spacing.spaceExtraLarge)
+                                    ),
+                            )
                             Spacer(modifier = Modifier.height(spacing.spaceMedium))
 //                            RatingBar(
 //                                value = movieRating,

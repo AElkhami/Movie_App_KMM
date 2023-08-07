@@ -1,7 +1,9 @@
 package com.example.movieapp.application
 
 import android.app.Application
-import org.koin.core.context.startKoin
+import com.example.movieapp.di.initKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
 
 /**
  * Created by A.Elkhami on 18/07/2023.
@@ -9,10 +11,9 @@ import org.koin.core.context.startKoin
 class AiMoviesApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        startKoin {
-//            androidLogger()
-//            androidContext(this@AiMoviesApp)
-//            modules(dataModule, homeModule)
+        initKoin {
+            androidLogger()
+            androidContext(this@AiMoviesApp)
         }
     }
 }

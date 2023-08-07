@@ -22,6 +22,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.example.aimovies.presentation.ui.theme.MovieYellow
 import com.example.movieapp.domain.model.MovieModel
 import com.example.movieapp.presentation.ui.LocalSpacing
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
+import io.ktor.http.Url
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 /**
@@ -35,8 +38,6 @@ fun MovieItem(
     onClick: (MovieModel) -> Unit
 ) {
     val spacing = LocalSpacing.current
-//    val painter = rememberAsyncImagePainter(movie.posterPath)
-//    val state = painter.state
 
     Column(modifier = modifier
         .width(IntrinsicSize.Min)
@@ -47,21 +48,15 @@ fun MovieItem(
         .padding(spacing.spaceSmall)) {
 
         Box(contentAlignment = Alignment.Center) {
-//            if (state is AsyncImagePainter.State.Loading) {
-//                LoadingAnimation()
-//            }
-//            AsyncImage(
-//                modifier = Modifier
-//                    .clip(RoundedCornerShape(spacing.curvedCornerSize))
-//                    .size(spacing.placeholderWidth, spacing.placeholderHeight),
-//                contentScale = ContentScale.Crop,
-//                model = movie.posterPath,
-//                onLoading = {
-//
-//                },
-//                error = painterResource(res = "R.drawable.movie_placeholder"),
-//                contentDescription = null
-//            )
+            KamelImage(
+                resource = asyncPainterResource(data = Url(movie.posterPath)),
+                contentDescription = null,
+                onLoading = { LoadingAnimation() },
+                onFailure = { },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(spacing.curvedCornerSize))
+                    .size(spacing.placeholderWidth, spacing.placeholderHeight)
+            )
         }
         Text(
             text = movie.title,
