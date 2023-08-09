@@ -1,6 +1,7 @@
 package com.example.movieapp.di
 
 import com.example.movieapp.presentation.home.HomeViewModel
+import com.example.movieapp.presentation.overveiw.OverviewViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.context.startKoin
@@ -25,6 +26,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) {
 
 object GetViewModels : KoinComponent {
     fun getHomeViewModel() = get<HomeViewModel>()
+    fun getOverviewViewModel() = get<OverviewViewModel>()
 }
 
 fun initKoin() = initKoin {}

@@ -41,87 +41,67 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.aimovies.presentation.ui.theme.MovieYellow
+import com.example.movieapp.di.GetViewModels
 import com.example.movieapp.domain.model.MovieModel
 import com.example.movieapp.presentation.home.composables.LoadingAnimation
 import com.example.movieapp.presentation.ui.LocalSpacing
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import io.ktor.http.Url
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.math.min
 
 /**
  * Created by A.Elkhami on 25/07/2023.
  */
-@Composable
-fun OverviewScreen(
-    movieId: Long,
-    title: String,
-    overview: String,
-    releaseDate: String,
-    posterPath: String,
-    voteAverage: String,
-//    navController: NavHostController
-) {
-//    val viewModel = koinViewModel<OverviewViewModel>()
 
-    val movie = MovieModel(
-        movieId = movieId,
-        title = title,
-        overview = overview,
-        releaseDate = releaseDate,
-        posterPath = posterPath,
-        voteAverage = voteAverage.toDouble()
-    )
+data class OverviewScreen(
+    val movie: MovieModel
+) : Screen {
+    @Composable
+    override fun Content() {
+        val viewModel = GetViewModels.getOverviewViewModel()
 
-//    viewModel.checkIfMovieIsFavourite(movieId)
-//    viewModel.getMovieRating(movieId)
 
-//    val uiState = viewModel.uiState
-    val uiState = OverviewUIModel(
-        isMovieFavourite = true,
-        rating = 9.0f
-    )
+        viewModel.checkIfMovieIsFavourite(movie.movieId)
+        viewModel.getMovieRating(movie.movieId)
 
-    OverviewScreenUi(
-        movieId = movieId,
-        title = title,
-        overview = overview,
-        releaseDate = releaseDate,
-        posterPath = posterPath,
-        voteAverage = voteAverage,
-        uiState = uiState,
-//        navController = navController,
-        onAddFavouriteClick = {
-//            if (uiState.isMovieFavourite) {
-//                viewModel.deleteFavouriteMovie(movieId)
-//            } else {
-//                viewModel.insertFavouriteMovie(movie)
-//            }
-        },
-        onRatingSelected = {
-//            viewModel.insertOrUpdateRating(movieId = movieId, rating = it)
-        }
-    )
+        val uiState = viewModel.uiState
+
+        OverviewScreenUi(
+            movie = movie,
+            uiState = uiState,
+            onAddFavouriteClick = {
+                if (uiState.isMovieFavourite) {
+                    viewModel.deleteFavouriteMovie(movie.movieId)
+                } else {
+                    viewModel.insertFavouriteMovie(movie)
+                }
+            },
+            onRatingSelected = {
+                viewModel.insertOrUpdateRating(movieId = movie.movieId, rating = it)
+            }
+        )
+    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverviewScreenUi(
-    movieId: Long,
-    title: String,
-    overview: String,
-    releaseDate: String,
-    posterPath: String,
-    voteAverage: String,
+    movie: MovieModel,
     uiState: OverviewUIModel,
-//    navController: NavHostController?,
     onAddFavouriteClick: (MovieModel) -> Unit,
     onRatingSelected: (Float) -> Unit
 ) {
+    val navigator = LocalNavigator.currentOrThrow
+
     val spacing = LocalSpacing.current
+
     val scrollState = rememberScrollState()
+
     var movieRating by remember {
         mutableStateOf(uiState.rating)
     }
@@ -136,12 +116,12 @@ fun OverviewScreenUi(
                 onClick = {
                     onAddFavouriteClick(
                         MovieModel(
-                            movieId = movieId,
-                            title = title,
-                            overview = overview,
-                            releaseDate = releaseDate,
-                            posterPath = posterPath,
-                            voteAverage = voteAverage.toDouble()
+                            movieId = movie.movieId,
+                            title = movie.title,
+                            overview = movie.overview,
+                            releaseDate = movie.releaseDate,
+                            posterPath = movie.posterPath,
+                            voteAverage = movie.voteAverage.toDouble()
                         )
                     )
                 }
@@ -180,7 +160,7 @@ fun OverviewScreenUi(
                         contentAlignment = Alignment.Center
                     ) {
                         KamelImage(
-                            resource = asyncPainterResource(data = Url(posterPath)),
+                            resource = asyncPainterResource(data = Url(movie.posterPath)),
                             contentDescription = null,
                             onLoading = { LoadingAnimation() },
                             onFailure = { },
@@ -200,7 +180,7 @@ fun OverviewScreenUi(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             KamelImage(
-                                resource = asyncPainterResource(data = Url(posterPath)),
+                                resource = asyncPainterResource(data = Url(movie.posterPath)),
                                 contentDescription = null,
                                 onLoading = { LoadingAnimation() },
                                 onFailure = { },
@@ -234,7 +214,7 @@ fun OverviewScreenUi(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = title,
+                            text = movie.title,
                             modifier = Modifier.padding(
                                 top = spacing.spaceSmall,
                                 start = spacing.spaceMedium,
@@ -262,13 +242,13 @@ fun OverviewScreenUi(
                                 )
                                 Spacer(modifier = Modifier.width(spacing.spaceSmall))
                                 Text(
-                                    text = voteAverage,
+                                    text = movie.voteAverage.toString(),
                                     color = Color.Gray,
                                 )
                             }
                             Spacer(modifier = Modifier.width(spacing.spaceMedium))
                             Text(
-                                text = releaseDate,
+                                text = movie.releaseDate,
                                 color = Color.Gray,
                                 modifier = Modifier.padding(top = spacing.spaceSmall),
                                 maxLines = 1,
@@ -276,7 +256,7 @@ fun OverviewScreenUi(
                             )
                         }
                         Text(
-                            text = overview,
+                            text = movie.overview,
                             modifier = Modifier.padding(
                                 top = spacing.spaceSmall,
                                 bottom = spacing.spaceExtraLarge + spacing.spaceMedium,
@@ -293,7 +273,7 @@ fun OverviewScreenUi(
                     .clip(CircleShape)
                     .background(Color.White)
                     .clickable {
-//                        navController?.popBackStack()
+                        navigator.pop()
                     }
                     .padding(spacing.spaceSmall)
                 ) {
