@@ -20,6 +20,7 @@ val coroutinesVersion = "1.7.3"
 val dateTimeVersion = "0.4.0"
 val mokoVersion = "0.16.1"
 val voyagerVersion = "1.0.0-rc05"
+val composeVersion = "1.4.1"
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
@@ -103,7 +104,6 @@ kotlin {
                 val koin_version = "3.4.1"
                 implementation("io.insert-koin:koin-android:$koin_version")
 
-
                 // Import the Firebase BoM
                 implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
                 implementation("com.google.firebase:firebase-analytics-ktx")
@@ -175,7 +175,6 @@ sqldelight {
 }
 
 dependencies {
-    implementation("androidx.core:core:1.10.1")
     commonMainApi("dev.icerock.moko:mvvm-core:0.16.1")
     commonMainApi("dev.icerock.moko:mvvm-compose:0.16.1")
     commonMainApi("dev.icerock.moko:mvvm-flow:0.16.1")

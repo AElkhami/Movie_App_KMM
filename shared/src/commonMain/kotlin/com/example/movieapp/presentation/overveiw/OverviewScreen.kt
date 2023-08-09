@@ -38,16 +38,16 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.aimovies.presentation.ui.theme.MovieYellow
+import com.example.aimovies.presentation.ui.theme.RateBackground
 import com.example.movieapp.di.GetViewModels
 import com.example.movieapp.domain.model.MovieModel
 import com.example.movieapp.presentation.home.composables.LoadingAnimation
+import com.example.movieapp.presentation.overveiw.composables.RatingBar
 import com.example.movieapp.presentation.ui.LocalSpacing
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
@@ -58,34 +58,33 @@ import kotlin.math.min
  * Created by A.Elkhami on 25/07/2023.
  */
 
-data class OverviewScreen(
-    val movie: MovieModel
-) : Screen {
-    @Composable
-    override fun Content() {
-        val viewModel = GetViewModels.getOverviewViewModel()
+@Composable
+fun OverviewScreen(
+    movie: MovieModel,
+    backAction: () -> Unit
+) {
+    val viewModel = GetViewModels.getOverviewViewModel()
 
+    viewModel.checkIfMovieIsFavourite(movie.movieId)
+    viewModel.getMovieRating(movie.movieId)
 
-        viewModel.checkIfMovieIsFavourite(movie.movieId)
-        viewModel.getMovieRating(movie.movieId)
+    val uiState = viewModel.uiState
 
-        val uiState = viewModel.uiState
-
-        OverviewScreenUi(
-            movie = movie,
-            uiState = uiState,
-            onAddFavouriteClick = {
-                if (uiState.isMovieFavourite) {
-                    viewModel.deleteFavouriteMovie(movie.movieId)
-                } else {
-                    viewModel.insertFavouriteMovie(movie)
-                }
-            },
-            onRatingSelected = {
-                viewModel.insertOrUpdateRating(movieId = movie.movieId, rating = it)
+    OverviewScreenUi(
+        movie = movie,
+        uiState = uiState,
+        onAddFavouriteClick = {
+            if (uiState.isMovieFavourite) {
+                viewModel.deleteFavouriteMovie(movie.movieId)
+            } else {
+                viewModel.insertFavouriteMovie(movie)
             }
-        )
-    }
+        },
+        onRatingSelected = {
+            viewModel.insertOrUpdateRating(movieId = movie.movieId, rating = it)
+        },
+        backAction
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,10 +93,9 @@ fun OverviewScreenUi(
     movie: MovieModel,
     uiState: OverviewUIModel,
     onAddFavouriteClick: (MovieModel) -> Unit,
-    onRatingSelected: (Float) -> Unit
+    onRatingSelected: (Float) -> Unit,
+    backAction: () -> Unit
 ) {
-    val navigator = LocalNavigator.currentOrThrow
-
     val spacing = LocalSpacing.current
 
     val scrollState = rememberScrollState()
@@ -121,7 +119,7 @@ fun OverviewScreenUi(
                             overview = movie.overview,
                             releaseDate = movie.releaseDate,
                             posterPath = movie.posterPath,
-                            voteAverage = movie.voteAverage.toDouble()
+                            voteAverage = movie.voteAverage
                         )
                     )
                 }
@@ -173,7 +171,9 @@ fun OverviewScreenUi(
                                         bottomEnd = spacing.spaceLarge
                                     )
                                 )
-                                .blur(spacing.spaceLarge, spacing.spaceLarge)
+                                .blur(spacing.spaceLarge, spacing.spaceLarge),
+                            contentScale = ContentScale.FillWidth
+
                         )
                         Column(
                             modifier = Modifier.fillMaxWidth(),
@@ -192,6 +192,18 @@ fun OverviewScreenUi(
                                     ),
                             )
                             Spacer(modifier = Modifier.height(spacing.spaceMedium))
+
+                            RatingBar(
+                                rating = movieRating,
+                                onRatingChanged = { newRating ->
+                                    movieRating = newRating
+                                    onRatingSelected(newRating)
+                                },
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(spacing.spaceMedium))
+                                    .background(RateBackground)
+                                    .padding(spacing.spaceMedium)
+                            )
 //                            RatingBar(
 //                                value = movieRating,
 //                                style = RatingBarStyle.Fill(MovieYellow),
@@ -273,7 +285,7 @@ fun OverviewScreenUi(
                     .clip(CircleShape)
                     .background(Color.White)
                     .clickable {
-                        navigator.pop()
+                        backAction()
                     }
                     .padding(spacing.spaceSmall)
                 ) {
