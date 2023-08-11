@@ -29,7 +29,6 @@ class HomeViewModel(
     fun insertFavouriteMovie(movie: MovieModel) {
         viewModelScope.launch {
             insertFavouriteMovieUseCase(movie)
-//            uiState = uiState.copy(isMovieFavourite = true)
         }
 
         getFavouriteMovies()

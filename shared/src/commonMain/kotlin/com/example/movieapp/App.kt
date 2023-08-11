@@ -11,7 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.movieapp.presentation.home.HomeScreen
 import com.example.movieapp.presentation.overveiw.OverviewScreen
-import org.koin.mp.KoinPlatform
+import org.koin.mp.KoinPlatform.getKoin
 
 /**
  * Created by A.Elkhami on 03/08/2023.
@@ -19,8 +19,8 @@ import org.koin.mp.KoinPlatform
 
 @Composable
 fun App() {
-    val homeScope = KoinPlatform.getKoin().createScope<HomeScreen>()
-    var overviewScope = KoinPlatform.getKoin().createScope<OverviewScreen>()
+    val homeScope = getKoin().createScope<HomeScreen>()
+    var overviewScope = getKoin().createScope<OverviewScreen>()
 
     MaterialTheme {
         Surface(
@@ -29,7 +29,7 @@ fun App() {
             var currentScreen: Route by remember { mutableStateOf(Route.Home) }
 
             when (currentScreen) {
-                Route.Home -> {
+                is Route.Home -> {
                     HomeScreen(route = { currentScreen = it }, homeScope).View()
                 }
 
@@ -38,7 +38,7 @@ fun App() {
                         movie = (currentScreen as Route.Overview).movie,
                         backAction = {
                             currentScreen = Route.Home
-                            overviewScope = KoinPlatform.getKoin().createScope<OverviewScreen>()
+                            overviewScope = getKoin().createScope<OverviewScreen>()
                         },
                         overviewScope
                     ).View()
