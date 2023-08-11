@@ -27,8 +27,6 @@ class OverviewViewModel(
 ) :
     ViewModel() {
 
-    var isRatingAvailable = false
-
     var uiState by mutableStateOf(OverviewUIModel())
         private set
 
@@ -60,17 +58,17 @@ class OverviewViewModel(
         viewModelScope.launch {
             getMovieRatingUseCase(movieId)?.let { movieRateEntity ->
                 uiState = uiState.copy(rating = movieRateEntity.rate.toFloat())
-                isRatingAvailable = true
+                uiState = uiState.copy(isRatingAvailable = true)
             }
         }
     }
 
     fun insertOrUpdateRating(movieId: Long, rating: Float) {
-        if (isRatingAvailable) {
+        if (uiState.isRatingAvailable) {
             updateMovieRating(movieId, rating)
         } else {
             insertMovieRating(movieId, rating)
-            isRatingAvailable = true
+            uiState = uiState.copy(isRatingAvailable = true)
         }
 //        analytics.logMovieRatingEvent(movieId, rating.toDouble())
     }

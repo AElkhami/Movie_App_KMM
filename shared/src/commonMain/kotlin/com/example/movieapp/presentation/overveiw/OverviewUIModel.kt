@@ -5,5 +5,6 @@ package com.example.movieapp.presentation.overveiw
  */
 data class OverviewUIModel(
     val isMovieFavourite: Boolean = false,
-    val rating: Float = 0.0f
+    val rating: Float = 0.0f,
+    val isRatingAvailable: Boolean = false
 )

@@ -28,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +45,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.example.aimovies.presentation.ui.theme.MovieYellow
 import com.example.aimovies.presentation.ui.theme.RateBackground
-import com.example.movieapp.di.GetViewModels
 import com.example.movieapp.domain.model.MovieModel
 import com.example.movieapp.presentation.home.composables.LoadingAnimation
 import com.example.movieapp.presentation.overveiw.composables.RatingBar
@@ -52,39 +52,50 @@ import com.example.movieapp.presentation.ui.LocalSpacing
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import io.ktor.http.Url
+import org.koin.core.scope.Scope
 import kotlin.math.min
 
 /**
  * Created by A.Elkhami on 25/07/2023.
  */
 
-@Composable
-fun OverviewScreen(
-    movie: MovieModel,
-    backAction: () -> Unit
+data class OverviewScreen(
+    val movie: MovieModel,
+    val backAction: () -> Unit,
+    val scope: Scope
 ) {
-    val viewModel = GetViewModels.getOverviewViewModel()
 
-    viewModel.checkIfMovieIsFavourite(movie.movieId)
-    viewModel.getMovieRating(movie.movieId)
+    private val viewModel = scope.get<OverviewViewModel>()
 
-    val uiState = viewModel.uiState
+    @Composable
+    fun View() {
 
-    OverviewScreenUi(
-        movie = movie,
-        uiState = uiState,
-        onAddFavouriteClick = {
-            if (uiState.isMovieFavourite) {
-                viewModel.deleteFavouriteMovie(movie.movieId)
-            } else {
-                viewModel.insertFavouriteMovie(movie)
+        LaunchedEffect(true) {
+            viewModel.checkIfMovieIsFavourite(movie.movieId)
+            viewModel.getMovieRating(movie.movieId)
+        }
+
+        val uiState = viewModel.uiState
+
+        OverviewScreenUi(
+            movie = movie,
+            uiState = uiState,
+            onAddFavouriteClick = {
+                if (uiState.isMovieFavourite) {
+                    viewModel.deleteFavouriteMovie(movie.movieId)
+                } else {
+                    viewModel.insertFavouriteMovie(movie)
+                }
+            },
+            onRatingSelected = {
+                viewModel.insertOrUpdateRating(movieId = movie.movieId, rating = it)
+            },
+            backAction = {
+                backAction()
+                scope.close()
             }
-        },
-        onRatingSelected = {
-            viewModel.insertOrUpdateRating(movieId = movie.movieId, rating = it)
-        },
-        backAction
-    )
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,6 +114,8 @@ fun OverviewScreenUi(
     var movieRating by remember {
         mutableStateOf(uiState.rating)
     }
+
+    movieRating = uiState.rating
 
     Scaffold(
         modifier = Modifier
@@ -192,7 +205,6 @@ fun OverviewScreenUi(
                                     ),
                             )
                             Spacer(modifier = Modifier.height(spacing.spaceMedium))
-
                             RatingBar(
                                 rating = movieRating,
                                 onRatingChanged = { newRating ->
@@ -204,21 +216,6 @@ fun OverviewScreenUi(
                                     .background(RateBackground)
                                     .padding(spacing.spaceMedium)
                             )
-//                            RatingBar(
-//                                value = movieRating,
-//                                style = RatingBarStyle.Fill(MovieYellow),
-//                                stepSize = StepSize.HALF,
-//                                onValueChange = {
-//                                    movieRating = it
-//                                },
-//                                onRatingChanged = {
-//                                    onRatingSelected(it)
-//                                },
-//                                modifier = Modifier
-//                                    .clip(RoundedCornerShape(spacing.spaceMedium))
-//                                    .background(RateBackground)
-//                                    .padding(spacing.spaceMedium)
-//                            )
                         }
                     }
                     Column(

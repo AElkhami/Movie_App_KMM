@@ -19,7 +19,6 @@ val ktorVersion = "2.3.2"
 val coroutinesVersion = "1.7.3"
 val dateTimeVersion = "0.4.0"
 val mokoVersion = "0.16.1"
-val voyagerVersion = "1.0.0-rc05"
 val composeVersion = "1.4.1"
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -64,9 +63,6 @@ kotlin {
                 implementation(compose.animation)
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-
-                //Navigation
-                implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
 
                 //image loading
                 implementation("media.kamel:kamel-image:0.7.1")

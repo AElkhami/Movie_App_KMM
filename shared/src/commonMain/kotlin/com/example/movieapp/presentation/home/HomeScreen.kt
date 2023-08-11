@@ -23,9 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import com.example.movieapp.di.GetViewModels
-import com.example.movieapp.domain.model.MovieModel
 import com.example.movieapp.Route
+import com.example.movieapp.domain.model.MovieModel
 import com.example.movieapp.presentation.home.composables.EmptyListView
 import com.example.movieapp.presentation.home.composables.ErrorView
 import com.example.movieapp.presentation.home.composables.MovieHorizontalItem
@@ -33,30 +32,35 @@ import com.example.movieapp.presentation.home.composables.MovieItem
 import com.example.movieapp.presentation.home.composables.ToggleButton
 import com.example.movieapp.presentation.home.composables.rememberForeverLazyListState
 import com.example.movieapp.presentation.ui.LocalSpacing
+import org.koin.core.scope.Scope
 
 /**
  * Created by A.Elkhami on 18/07/2023.
  */
 
-@Composable
-fun HomeScreen(
-    route: (Route)-> Unit
+data class HomeScreen(
+    val route: (Route)-> Unit,
+    val scope: Scope
 ) {
-    val viewModel = GetViewModels.getHomeViewModel()
+    val viewModel = scope.get<HomeViewModel>()
 
-    LaunchedEffect(key1 = true) {
-        viewModel.getDiscoverMovie(1)
-        viewModel.getFavouriteMovies()
-    }
-    HomeScreenUi(
-        viewModel.uiState,
-        onNavigateToOverview = {
-            route(Route.Overview(movie = it))
-        },
-        onRefresh = {
+    @Composable
+    fun View(){
+
+        LaunchedEffect(key1 = true) {
             viewModel.getDiscoverMovie(1)
+            viewModel.getFavouriteMovies()
         }
-    )
+        HomeScreenUi(
+            viewModel.uiState,
+            onNavigateToOverview = {
+                route(Route.Overview(movie = it))
+            },
+            onRefresh = {
+                viewModel.getDiscoverMovie(1)
+            }
+        )
+    }
 }
 
 @Composable
