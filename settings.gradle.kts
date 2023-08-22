@@ -35,3 +35,4 @@ dependencyResolutionManagement {
 rootProject.name = "Movie_App"
 include(":androidApp")
 include(":shared")
+include(":desktop")

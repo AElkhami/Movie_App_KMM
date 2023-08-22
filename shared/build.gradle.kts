@@ -33,6 +33,12 @@ kotlin {
         }
     }
 
+    jvm("desktop"){
+        compilations.all {
+            kotlinOptions.jvmTarget = "17"
+        }
+    }
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -113,6 +119,14 @@ kotlin {
             dependencies {
                 implementation("app.cash.sqldelight:native-driver:${Versions.sqlDelight}")
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+            }
+        }
+
+        val desktopMain by getting {
+
+            dependencies {
+                implementation("app.cash.sqldelight:sqlite-driver:${Versions.sqlDelight}")
+                implementation("io.ktor:ktor-client-apache5:$ktorVersion")
             }
         }
     }
